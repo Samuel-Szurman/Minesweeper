@@ -31,8 +31,8 @@ class Hexagon:
         y = self.board.a + row * 1.5 * self.board.a
 
         self.current_color = self.blue
-        self.points_out = [point + (x, y) for point in self.board.original_points_out]
-        self.points_in = [point + (x, y) for point in self.board.original_points_in]
+        self.points_out = self.board.original_points_out + (x, y)
+        self.points_in = self.board.original_points_in + (x, y)
 
     def set_neighbors_count(self, neighbors_count, bombs_count):
         self.neighbors_count = neighbors_count
