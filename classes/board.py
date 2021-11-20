@@ -10,6 +10,7 @@ class Board(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.width = width
         self.height = height
+        self.center = (width/2, height/2)
         self.image = pygame.Surface((self.width, self.height))
         self.image.fill((0, 0, 0))
         self.rect = self.image.get_rect()
@@ -64,6 +65,14 @@ class Board(pygame.sprite.Sprite):
         self.is_game_won = False
         self.flags_count = 0
         self.checked_count = 0
+
+    def set_level(self, level):
+        if level == 1:
+            self.set_settings(8, 6, 5)
+        elif level == 2:
+            self.set_settings(10, 8, 8)
+        elif level == 3:
+            self.set_settings(12, 10, 10)
 
     def set_settings(self, cols, rows, bombs):
         self.image.fill((0, 0, 0))
@@ -147,9 +156,15 @@ class Board(pygame.sprite.Sprite):
                 self.hexagons[index].set_neighbors_count(neighbors_count, bombs_count)
 
     def update(self):
+        self.image.fill((0, 0, 0))
+        pygame.draw.rect(self.image, (0, 255, 0), (0, 0, self.width, self.height), 1, 10)
         for hexagon in self.hexagons:
             hexagon.draw()
         # self.rect = self.surf.get_rect()
+        if self.is_game_over:
+            self.draw_alert("GAME OVER")
+        elif self.is_game_won:
+            self.draw_alert("YOU WIN")
 
     def find_hexagon(self, mouse_x, mouse_y):
 
@@ -189,3 +204,10 @@ class Board(pygame.sprite.Sprite):
         level_x = int(level_x)
         level_y = int(level_y)
         return self.hexagons[level_y * self.cols+level_x]
+
+    def draw_alert(self, text):
+        pygame.draw.rect(self.image, (0, 0, 0), (self.width/2 - 100, self.height/2 - 20, 200, 40), 0, 10)
+        pygame.draw.rect(self.image, (255, 0, 0), (self.width / 2-100, self.height / 2-20, 200, 40), 1, 10)
+        text_surface = self.font.render(text, False, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=self.center)
+        self.image.blit(text_surface, text_rect)

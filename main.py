@@ -1,7 +1,9 @@
 from classes.board import Board
 from classes.mines_counter import MinesCounter
-from classes.status_sprite import StatusSprite
+from classes.return_sprite import ReturnSprite
 from classes.restart_sprite import RestartSprite
+from classes.level_sprite import LevelSprite
+from classes.text_sprite import TextSprite
 import pygame
 from pygame.locals import (
     QUIT,
@@ -25,12 +27,24 @@ pygame.display.set_icon(icon)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 font = pygame.font.SysFont('arial', 30)
 
-board = Board(50, 100, 700, 500)
-status_sprite = StatusSprite(125, 5, 550, 40, board)
-mines_counter = MinesCounter(125, 55, 250, 40, board)
-restart_sprite = RestartSprite(425, 55, 250, 40, board)
-sprites = pygame.sprite.Group()
-sprites.add(board, status_sprite, mines_counter, restart_sprite)
+# game sprites
+board = Board(50, 50, 700, 500)
+mines_counter = MinesCounter(300, 5, 200, 40, board)
+return_sprite = ReturnSprite(150, 555, 250, 40, board)
+restart_sprite = RestartSprite(450, 555, 250, 40, board)
+game_sprites = pygame.sprite.Group()
+game_sprites.add(board, mines_counter, return_sprite, restart_sprite)
+
+# menu sprites
+title_sprite = TextSprite(200, 100, 400, 50, "SELECT LEVEL")
+level1_sprite = LevelSprite(300, 200, 200, 50, board, 1)
+level2_sprite = LevelSprite(300, 280, 200, 50, board, 2)
+level3_sprite = LevelSprite(300, 360, 200, 50, board, 3)
+level_sprites = [level1_sprite, level2_sprite, level3_sprite]
+menu_sprites = pygame.sprite.Group()
+menu_sprites.add(title_sprite, level1_sprite, level2_sprite, level3_sprite)
+
+is_menu_on = True
 
 running = True
 while running:
@@ -40,14 +54,27 @@ while running:
         elif event.type == MOUSEBUTTONDOWN:
             if event.button == LEFT:
                 x, y = pygame.mouse.get_pos()
-                board.left_click(x, y)
-                restart_sprite.left_click(x, y)
+                if is_menu_on:
+                    for level_sprite in level_sprites:
+                        if level_sprite.is_clicked(x, y):
+                            is_menu_on = False
+                            break
+                else:
+                    board.left_click(x, y)
+                    restart_sprite.left_click(x, y)
+                    if return_sprite.is_clicked(x, y):
+                        is_menu_on = True
             elif event.button == RIGHT:
-                x, y = pygame.mouse.get_pos()
-                board.right_click(x, y)
+                if not is_menu_on:
+                    x, y = pygame.mouse.get_pos()
+                    board.right_click(x, y)
 
     screen.fill((0, 0, 0))
-    sprites.update()
-    sprites.draw(screen)
+    if is_menu_on:
+        menu_sprites.update()
+        menu_sprites.draw(screen)
+    else:
+        game_sprites.update()
+        game_sprites.draw(screen)
     pygame.display.flip()
     clock.tick(FPS)
