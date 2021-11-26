@@ -1,3 +1,5 @@
+import os
+
 import pygame
 from math import sqrt
 import random
@@ -19,8 +21,9 @@ class Board(pygame.sprite.Sprite):
         self.font = pygame.font.SysFont('Verdana', 30)
 
         self.icon_size = (40, 40)
-        flag_icon = pygame.image.load('images/flag_icon.png')
-        bomb_icon = pygame.image.load('images/bomb_icon.png')
+        filepath = os.path.dirname(__file__)
+        flag_icon = pygame.image.load(os.path.join(filepath, '..', 'images', 'flag_icon.png'))
+        bomb_icon = pygame.image.load(os.path.join(filepath, '..', 'images', 'bomb_icon.png'))
         self.flag_icon = pygame.transform.scale(flag_icon, self.icon_size)
         self.bomb_icon = pygame.transform.scale(bomb_icon, self.icon_size)
 
