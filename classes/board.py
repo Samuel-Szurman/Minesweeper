@@ -71,11 +71,11 @@ class Board(pygame.sprite.Sprite):
 
     def set_level(self, level):
         if level == 1:
-            self.set_settings(8, 6, 5)
+            self.set_settings(8, 6, 8)
         elif level == 2:
-            self.set_settings(10, 8, 8)
+            self.set_settings(10, 8, 15)
         elif level == 3:
-            self.set_settings(12, 10, 10)
+            self.set_settings(12, 10, 20)
 
     def set_settings(self, cols, rows, bombs):
         self.image.fill((0, 0, 0))

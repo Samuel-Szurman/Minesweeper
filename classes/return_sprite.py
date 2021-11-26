@@ -10,7 +10,7 @@ class ReturnSprite(TextSprite):
     def update(self):
         self.image.fill((0, 0, 0))
         pygame.draw.rect(self.image, (0, 0, 255), (0, 0, self.width, self.height), 1, 10)
-        self.set_text("Select level")
+        self.set_text("Return to menu")
 
     def is_clicked(self, mouse_x, mouse_y):
         mouse_x -= self.rect.x
