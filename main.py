@@ -47,7 +47,6 @@ menu_sprites = pygame.sprite.Group()
 menu_sprites.add(title_sprite, level1_sprite, level2_sprite, level3_sprite)
 
 is_menu_on = True
-
 running = True
 while running:
     for event in pygame.event.get():
@@ -59,6 +58,7 @@ while running:
                 if is_menu_on:
                     for level_sprite in level_sprites:
                         if level_sprite.is_clicked(x, y):
+                            level_sprite.set_level()
                             is_menu_on = False
                             break
                 else:
@@ -71,24 +71,6 @@ while running:
                 if not is_menu_on:
                     x, y = pygame.mouse.get_pos()
                     board.right_click(x, y)
-            elif event.type == MOUSEBUTTONDOWN:
-                if event.button == LEFT:
-                    x, y = pygame.mouse.get_pos()
-                    if is_menu_on:
-                        for level_sprite in level_sprites:
-                            if level_sprite.is_clicked(x, y):
-                                is_menu_on = False
-                                break
-                    else:
-                        board.left_click(x, y)
-                        if restart_sprite.is_clicked(x, y):
-                            board.restart()
-                        if return_sprite.is_clicked(x, y):
-                            is_menu_on = True
-                elif event.button == RIGHT:
-                    if not is_menu_on:
-                        x, y = pygame.mouse.get_pos()
-                        board.right_click(x, y)
         elif event.type == pygame.KEYDOWN:
             if is_menu_on:
                 if event.key == pygame.K_1:
